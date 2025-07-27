@@ -18,15 +18,16 @@ app.config["JWT_HEADER_NAME"] = "Authorization"
 app.config["JWT_HEADER_TYPE"] = "Bearer"
 jwt = JWTManager(app)
 
-# ✅ CORS Configuration for frontend
+# ✅ CORS Configuration (local + deployed frontend)
 CORS(
     app,
     resources={r"/api/*": {"origins": [
         "http://localhost:5173",
-        "https://roommate-retail-frontend-4ayzdq8v9-aditya-mohantys-projects.vercel.app"
+        "https://roommate-retail-frontend.vercel.app"
     ]}},
     supports_credentials=True,
-    methods=["GET", "POST", "OPTIONS", "DELETE"]
+    methods=["GET", "POST", "OPTIONS", "DELETE"],
+    allow_headers=["Content-Type", "Authorization"]
 )
 
 # ✅ SQLAlchemy Configuration
@@ -37,11 +38,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 from models import db  # models.py in same directory
 db.init_app(app)
 
-# 🟢 Create DB Tables on startup (Flask 3.x safe)
+# ✅ Auto-create DB Tables on startup
 with app.app_context():
     db.create_all()
 
-# ✅ Import and register blueprints
+# ✅ Register Blueprints
 from auth.routes import auth_bp
 from group.routes import group_bp
 from cart.routes import cart_bp
@@ -50,7 +51,7 @@ app.register_blueprint(auth_bp, url_prefix="/api")
 app.register_blueprint(group_bp, url_prefix="/api")
 app.register_blueprint(cart_bp, url_prefix="/api")
 
-# ✅ AI Shopping List Handler
+# ✅ AI Shopping List Endpoint
 from ai.huddle_ai import get_structured_shopping_list
 
 @app.route("/api/huddle", methods=["POST"])
@@ -71,7 +72,7 @@ def huddle_ai():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-# ✅ Health Check Routes
+# ✅ Health Check
 @app.route("/")
 def home():
     return jsonify({"message": "RoomMate Retail backend is running!"})
@@ -80,6 +81,6 @@ def home():
 def ping():
     return jsonify({"status": "ok"})
 
-# ✅ Run the Flask server
+# ✅ Run locally
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
