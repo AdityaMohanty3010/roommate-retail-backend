@@ -23,7 +23,7 @@ CORS(
     app,
     resources={r"/api/*": {"origins": [
         "http://localhost:5173",
-        "https://roommate-retail-frontend-btca.vercel.app"
+        "https://roommate-retail-frontend-4ayzdq8v9-aditya-mohantys-projects.vercel.app"
     ]}},
     supports_credentials=True,
     methods=["GET", "POST", "OPTIONS", "DELETE"]
