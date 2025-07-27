@@ -21,7 +21,10 @@ jwt = JWTManager(app)
 # ✅ CORS Configuration for frontend
 CORS(
     app,
-    resources={r"/api/*": {"origins": "http://localhost:5173"}},
+    resources={r"/api/*": {"origins": [
+        "http://localhost:5173",
+        "https://roommate-retail-frontend-btca.vercel.app"
+    ]}},
     supports_credentials=True,
     methods=["GET", "POST", "OPTIONS", "DELETE"]
 )
